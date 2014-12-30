@@ -1,25 +1,23 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-Element providing solution to no problem in particular.
+This polymer component changes mouse pointer behavior. With each click new pointers are added to the page.
+Just add <pb-lepracursor></pb-lepracursor> tag inside body tag.
 
 ##### Example
 
     <pb-lepracursor></pb-lepracursor>
 
 @element pb-lepracursor
-@blurb Element providing solution to no problem in particular.
+@blurb This polymer component changes mouse pointer behavior. With each click new pointers are added to the page.
 @status alpha
-@homepage http://polymerlabs.github.io/pb-lepracursor
+@homepage http://sepans.github.io/pb-lepracursor
 -->
 <polymer-element name="pb-lepracursor" attributes="notitle author">
 
   <template>
 
     <link rel="stylesheet" href="pb-lepracursor.css" />
-
-    
-
 
   </template>
 
@@ -89,16 +87,7 @@ Element providing solution to no problem in particular.
         }.bind(this));         
 
          
-
-
-        var links = document.querySelectorAll('a');
-
-        [].forEach.call(links, function(link) {
-            link.style.cursor = 'none';
-            link.addEventListener('click', this._addNodes.bind(this));
-        }.bind(this));
-
-
+        this.convertLinks();
 
         //setup d3 force layout
         
@@ -129,6 +118,21 @@ Element providing solution to no problem in particular.
 
 
       },
+      /**
+       * call this function whenever links within the html page change.
+       * @return {None} 
+       */
+      convertLinks: function() {
+
+        var links = document.querySelectorAll('a');
+
+        [].forEach.call(links, function(link) {
+            link.style.cursor = 'none';
+            link.addEventListener('click', this._addNodes.bind(this));
+        }.bind(this));
+
+
+      },
 
       _addNodes: function(e) {
 
@@ -153,32 +157,23 @@ Element providing solution to no problem in particular.
 
         this._redraw();        
 
-
-
       },
 
       _tick: function() {
          
-
           this._node.attr("x", function(d) { return d.x - 10; })
                     .attr("y", function(d) { return d.y + 5; });
       },
 
       _redraw: function() {
 
-
          this._node = this._node.data(this._nodes);
-
   
          this._node.enter().insert("image")
                         .attr("xlink:href", "img/cursor.png")
                         .attr("width", "15")
                         .attr("height", "24");
                         
-  
-
-         
-
           this._force.start();
 
 
