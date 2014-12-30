@@ -1,0 +1,193 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Element providing solution to no problem in particular.
+
+##### Example
+
+    <pb-lepracursor></pb-lepracursor>
+
+@element pb-lepracursor
+@blurb Element providing solution to no problem in particular.
+@status alpha
+@homepage http://polymerlabs.github.io/pb-lepracursor
+-->
+<polymer-element name="pb-lepracursor" attributes="notitle author">
+
+  <template>
+
+    <link rel="stylesheet" href="pb-lepracursor.css" />
+
+    
+
+
+  </template>
+
+  <script src="../d3/d3.min.js"></script>
+
+  <script>
+
+    Polymer({
+      
+      _nodes: [],
+      _links: [],
+      _node: null,
+      _link: null,
+      _width: 4000,
+      _height: 4000,
+      _force: null,
+      _svg: null,
+      cursor: null,
+
+      ready: function() {
+         
+        //remove the actual cursor
+        var body = document.querySelector('body');
+        body.style.cursor = 'none';
+        var html = document.querySelector('html');
+        html.style.cursor = 'none';
+
+        //add cursor container
+        this.cursor = document.createElement('div');
+        this.cursor.style.position = 'absolute';
+        this.cursor.style.zIndex = 1000;
+        this.cursor.style.pointerEvents = 'none';
+
+
+        //add real cursor
+        var realCursor = document.createElement('img');
+        realCursor.setAttribute('src','img/cursor.png');
+        realCursor.style.position = 'absolute';
+        realCursor.style.left = this._width/2 + 'px';
+        realCursor.style.top = this._width/2 + 'px';
+
+        this.cursor.appendChild(realCursor);
+
+        body.appendChild(this.cursor);
+
+
+        //move cursor container with pointer
+        html.addEventListener('mousemove', function(e) {
+            
+            this.cursor.style.top = ((e.pageY)-this._height/2-5) + 'px';
+            this.cursor.style.left = ((e.pageX)-this._width/2-5) + 'px';
+
+        }.bind(this));         
+
+
+        // show/hide cursor when pointer enter/exits html page
+        html.addEventListener('mouseover', function(e) {
+            
+            this.cursor.style.display = 'block';
+
+        }.bind(this));         
+
+        html.addEventListener('mouseout', function(e) {
+            
+            this.cursor.style.display = 'none';
+
+        }.bind(this));         
+
+         
+
+
+        var links = document.querySelectorAll('a');
+
+        [].forEach.call(links, function(link) {
+            link.style.cursor = 'none';
+            link.addEventListener('click', this._addNodes.bind(this));
+        }.bind(this));
+
+
+
+        //setup d3 force layout
+        
+        this._force = d3.layout.force()
+                  .size([this._width, this._height])
+                  .nodes([])//[{x: this._width/2,y:this._height/2}]) // initialize with a single node
+                  .linkDistance(10)
+                  .charge(-50)
+                  .on("tick", this._tick.bind(this));
+
+ 
+         this._svg = d3.select(this.cursor).append("svg")
+            .attr("width", this._width)
+            .attr("height", this._height);
+  
+
+         // get layout properties
+         this._nodes = this._force.nodes(),
+         this._links = this._force.links();
+
+            
+          this._node = this._svg.selectAll(".node"),
+          this._link = this._svg.selectAll(".link");
+
+
+          this._redraw();
+
+
+
+      },
+
+      _addNodes: function(e) {
+
+        e.preventDefault();
+
+        // generate a random number between (num_of_cursors ^ 2) / 2 and 20
+        // to make number of cursors grow exponentially
+        var reproduce = Math.max( 1 , Math.min(20, Math.pow(this._nodes.length, 2) / 2));
+
+        for(var i=0; i<reproduce; i++)
+        {
+
+            var node = {x: this._width/2+ Math.floor(Math.random()*10), y: this._height/2+ Math.floor(Math.random()*10)};
+            this._nodes.push(node);
+
+            var index = Math.floor(Math.random()*this._nodes.length);
+    
+            this._links.push({source: this._nodes[index], target: node});
+
+        }
+
+
+        this._redraw();        
+
+
+
+      },
+
+      _tick: function() {
+         
+
+          this._node.attr("x", function(d) { return d.x - 10; })
+                    .attr("y", function(d) { return d.y + 5; });
+      },
+
+      _redraw: function() {
+
+
+         this._node = this._node.data(this._nodes);
+
+  
+         this._node.enter().insert("image")
+                        .attr("xlink:href", "img/cursor.png")
+                        .attr("width", "15")
+                        .attr("height", "24");
+                        
+  
+
+         
+
+          this._force.start();
+
+
+      }
+
+      
+
+    });
+
+  </script>
+
+</polymer-element>
