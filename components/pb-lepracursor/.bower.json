@@ -1,0 +1,30 @@
+{
+  "name": "pb-lepracursor",
+  "description": "This polymer component changes mouse pointer behavior. With each click new pointers are added to the page.",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "mouse",
+    "cursor",
+    "reverse hypertext"
+  ],
+  "main": "pb-lepracursor.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.1",
+    "d3": "~3.5.2"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.0.0"
+  },
+  "homepage": "https://github.com/sepans/pb-lepracursor",
+  "_release": "bc5ee46a45",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "bc5ee46a45729db21ef32f740eff522e7102e178"
+  },
+  "_source": "git://github.com/sepans/pb-lepracursor.git",
+  "_target": "master",
+  "_originalSource": "sepans/pb-lepracursor",
+  "_direct": true
+}

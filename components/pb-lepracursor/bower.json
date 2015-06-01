@@ -1,0 +1,20 @@
+{
+  "name": "pb-lepracursor",
+  "version": "0.0.1",
+  "description": "This polymer component changes mouse pointer behavior. With each click new pointers are added to the page.",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "mouse",
+    "cursor",
+    "reverse hypertext"
+  ],
+  "main": "pb-lepracursor.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.1",
+    "d3": "~3.5.2"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.0.0"
+  }
+}
